@@ -23,8 +23,8 @@
    (catch Exception _ nil)))
 
 (defn load-values
-  []
- (for [m (str/split (slurp "input.txt") #"mul")]
+  [input]
+ (for [m (str/split input #"mul")]
    (let [has-paren (str/starts-with? m left-paren)
          comma-idx (str/index-of m comma 1)
          right-paren-idx (if (nil? comma-idx) nil (str/index-of m right-paren comma-idx))]
@@ -40,4 +40,20 @@
         is-large (and not-is-nil (or (> 999 i1)(> 999 i2)))]
     (if  is-nil acc (+ acc (* i1 i2))))) 
 
-(println(reduce mult-values 0 (load-values)))
+;day 1
+(defn get-all-mult
+  []
+  (println(reduce mult-values 0 (load-values(slurp "input.txt")))))
+
+
+(defn fix-do-dont
+  [acc i]
+  (let [a (str/index-of i "don't()")
+        b (if (nil? a) i (subs i 0 a))]
+   (str acc b)))
+
+
+(println(reduce mult-values 0 (load-values(reduce fix-do-dont  "" (str/split (slurp "input.txt") #"do\(\)")))))
+;(println(str/split (slurp "input.txt") #"do\(\)"))
+
+
